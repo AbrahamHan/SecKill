@@ -16,6 +16,10 @@ public class CodeMsg {
 	public static CodeMsg MOBILE_NOT_EXIST = new CodeMsg(500214,"手机号码不存在");
 	public static CodeMsg PASSWORD_ERROR = new CodeMsg(500215,"密码错误");
 	//商品模块 5003XX
+	
+	//秒杀模块 5005XX
+	public static CodeMsg SEC_KILL_OVER = new CodeMsg(500500,"商品已经秒杀完毕");
+	public static CodeMsg REPEATE_SEC_KILL = new CodeMsg(500501,"不能重复秒杀");
 	public CodeMsg(int i, String string) {
 		this.code = i;
 		this.msg = string;
