@@ -86,8 +86,6 @@ public class SecKillService {
 		redisService.set(SecKillUserKey.token, token, user);
 		Cookie cookie = new Cookie(COOKIE_NAME_TOKEN,token);
 		cookie.setMaxAge(SecKillUserKey.token.expireSeconds());
-		//System.out.println(SecKillUserKey.token.expireSeconds());
-		//System.out.println(cookie.getMaxAge());
 		cookie.setPath("/");
 		response.addCookie(cookie);
 	}
