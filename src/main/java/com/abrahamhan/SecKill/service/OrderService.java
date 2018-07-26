@@ -10,6 +10,8 @@ import com.abrahamhan.SecKill.dao.OrderDao;
 import com.abrahamhan.SecKill.domain.OrderInfo;
 import com.abrahamhan.SecKill.domain.SecKillOrder;
 import com.abrahamhan.SecKill.domain.SecKillUser;
+import com.abrahamhan.SecKill.redis.OrderKey;
+import com.abrahamhan.SecKill.redis.RedisService;
 import com.abrahamhan.SecKill.vo.GoodsVo;
 
 
@@ -18,6 +20,8 @@ public class OrderService {
 	
 	@Autowired
 	OrderDao orderDao;
+	@Autowired
+	RedisService redisService;
 	/**
 	 * 通过用户id和商品id获取秒杀订单
 	 * @param userId
@@ -25,7 +29,8 @@ public class OrderService {
 	 * @return
 	 */
 	public SecKillOrder getSecKillOrderByUserIdGoodsId(long userId, long goodsId) {
-		return orderDao.getSecKillOrderByUserIdGoodsId(userId, goodsId);
+		//return orderDao.getSecKillOrderByUserIdGoodsId(userId, goodsId);
+		return redisService.get(OrderKey.getSeckillOrderByUidGid, ""+userId+"_"+goodsId, SecKillOrder.class);
 	}
 	
 	public OrderInfo getOrderById(long orderId) {
@@ -53,8 +58,12 @@ public class OrderService {
 		SecKillOrder secKillOrder = new SecKillOrder();
 		secKillOrder.setGoodsId(goods.getId());
 		secKillOrder.setOrderId(orderId);
+		
 		secKillOrder.setUserId(user.getId());
 		orderDao.insertSecKillOrder(secKillOrder);
+		
+		redisService.set(OrderKey.getSeckillOrderByUidGid, ""+user.getId()+"_"+goods.getId(), secKillOrder);
+		
 		return orderInfo;
 	}
 	
