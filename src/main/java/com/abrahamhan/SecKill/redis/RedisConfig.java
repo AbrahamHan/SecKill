@@ -2,7 +2,11 @@ package com.abrahamhan.SecKill.redis;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-
+/**
+ * redis的config类
+ * @author abrahamhan
+ *
+ */
 @Component
 @ConfigurationProperties(prefix="redis")
 public class RedisConfig {

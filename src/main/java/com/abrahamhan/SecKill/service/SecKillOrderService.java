@@ -17,7 +17,12 @@ public class SecKillOrderService {
 	
 	@Autowired
 	OrderService orderService;
-
+	/**
+	 * 秒杀事务
+	 * @param user
+	 * @param goods
+	 * @return
+	 */
 	@Transactional
 	public OrderInfo seckill(SecKillUser user, GoodsVo goods) {
 		//减库存 下订单 写入秒杀订单

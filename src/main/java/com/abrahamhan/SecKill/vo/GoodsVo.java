@@ -4,7 +4,11 @@ import java.util.Date;
 
 import com.abrahamhan.SecKill.domain.Goods;
 
-
+/**
+ * 秒杀订单信息
+ * @author abrahamhan
+ *
+ */
 public class GoodsVo extends Goods{
 	private Double seckillPrice;
 	private Integer stockCount;

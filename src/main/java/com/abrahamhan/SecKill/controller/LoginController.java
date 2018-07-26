@@ -29,7 +29,10 @@ public class LoginController {
 	@Autowired
 	RedisService redisService;
 	
-	
+	/**
+	 * 登录页面
+	 * @return
+	 */
 	@RequestMapping("/to_login")
 	public String toLogin()
 	{
@@ -37,7 +40,12 @@ public class LoginController {
 	}
 	
 	
-	
+	/**
+	 * 页面操作
+	 * @param response
+	 * @param loginVo
+	 * @return
+	 */
 	@RequestMapping("/do_login")
 	@ResponseBody
 	public Result<Boolean> do_login(HttpServletResponse response,@Valid LoginVo loginVo)

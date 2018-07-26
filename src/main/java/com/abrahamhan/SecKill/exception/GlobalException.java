@@ -2,6 +2,12 @@ package com.abrahamhan.SecKill.exception;
 
 import com.abrahamhan.SecKill.result.CodeMsg;
 
+/**
+ * 
+ * 全局异常
+ * @author abrahamhan
+ *
+ */
 public class GlobalException extends RuntimeException {
 
 	/**

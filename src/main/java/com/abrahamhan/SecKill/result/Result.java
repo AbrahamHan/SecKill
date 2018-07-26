@@ -4,12 +4,19 @@ public class Result <T>  {
 	private int code;
 	private String msg;
 	private T data;
-	
+	/**
+	 * 成功的结果对象
+	 * @param data
+	 */
 	private Result(T data) {
 		this.code = 0;
 		this.msg = "success";
 		this.data = data;
 	}
+	/**
+	 * 失败时候的结果对象
+	 * @param cm
+	 */
 	public Result(CodeMsg cm) {
 		if(cm == null)
 		{

@@ -27,11 +27,55 @@ public class SecKillService {
 	
 	@Autowired
 	RedisService redisService;
-	
+	/**
+	 * 通过id来获取对象
+	 * @param id
+	 * @return
+	 */
 	public SecKillUser getById(long id)
 	{
-		return secKillUserDao.getById(id);
+		//获取缓存
+		SecKillUser user = redisService.get(SecKillUserKey.getById, ""+id, SecKillUser.class);
+		if(user != null)
+		{
+			return user;
+		}
+		//从数据库中获取数据
+		user = secKillUserDao.getById(id);
+		if(user != null)
+		{
+			redisService.set(SecKillUserKey.getById, ""+id,user);
+		}
+		return user;
 	}
+	/**
+	 * 重新设置密码
+	 * @param id
+	 * @param passwordNew
+	 * @return
+	 */
+	public boolean updatePassword(String token,long id,String formpass)
+	{
+		//取user
+		
+		SecKillUser user = getById(id);
+		if(user == null)
+		{
+			throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
+		}
+		//更新数据库
+		SecKillUser toBeUpdate = new SecKillUser();
+		toBeUpdate.setId(id);
+		toBeUpdate.setPassword(MD5Util.formPass2DBPass(formpass,user.getSalt()));
+		secKillUserDao.update(toBeUpdate);
+		//处理缓存
+		redisService.delete(SecKillUserKey.getById, ""+id);
+		user.setPassword(toBeUpdate.getPassword());
+		redisService.set(SecKillUserKey.token,token, user);
+		return true;
+	}
+	
+	
 	/**
 	 * 登录前的操作，判断，添加cookie
 	 * @param response
@@ -67,6 +111,12 @@ public class SecKillService {
 		
 		return true;
 	}
+	/**
+	 * 通过user的Token值来获取SeKillUser的对象
+	 * @param response
+	 * @param token
+	 * @return
+	 */
 	public SecKillUser getByToken(HttpServletResponse response,String token)
 	{
 		if(StringUtils.isEmpty(token))
@@ -81,7 +131,12 @@ public class SecKillService {
 		}
 		return user;
 	}
-
+	/**
+	 * 添加cookie操作，通过redis设置token与SecKillUser的map
+	 * @param response
+	 * @param token
+	 * @param user
+	 */
 	private void addCookie(HttpServletResponse response, String token, SecKillUser user) {
 		redisService.set(SecKillUserKey.token, token, user);
 		Cookie cookie = new Cookie(COOKIE_NAME_TOKEN,token);

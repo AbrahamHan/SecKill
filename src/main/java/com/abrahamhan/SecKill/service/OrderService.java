@@ -18,11 +18,25 @@ public class OrderService {
 	
 	@Autowired
 	OrderDao orderDao;
-	
+	/**
+	 * 通过用户id和商品id获取秒杀订单
+	 * @param userId
+	 * @param goodsId
+	 * @return
+	 */
 	public SecKillOrder getSecKillOrderByUserIdGoodsId(long userId, long goodsId) {
 		return orderDao.getSecKillOrderByUserIdGoodsId(userId, goodsId);
 	}
-
+	
+	public OrderInfo getOrderById(long orderId) {
+		return orderDao.getOrderById(orderId);
+	}
+	/**
+	 * 创建订单
+	 * @param user
+	 * @param goods
+	 * @return
+	 */
 	@Transactional
 	public OrderInfo createOrder(SecKillUser user, GoodsVo goods) {
 		OrderInfo orderInfo = new OrderInfo();

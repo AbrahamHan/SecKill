@@ -6,11 +6,17 @@ import org.springframework.stereotype.Service;
 
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-
+/**
+ * Redis缓存的工厂类
+ * @author abrahamhan
+ *
+ */
 @Service
 public class RedisPoolFactory {
+	//获取redis的配置
 	@Autowired
 	RedisConfig redisConfig;
+	//生成redis的JedisPool
 	@Bean
 	public JedisPool JedisPoolFactory() {
 		JedisPoolConfig poolConfig = new JedisPoolConfig();

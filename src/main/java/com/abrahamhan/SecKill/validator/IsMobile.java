@@ -17,6 +17,11 @@ import javax.validation.Payload;
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy= {IsMobileValidator.class})
+/**
+ * 使用JSR-303注解来验证手机号码
+ * @author abrahamhan
+ *
+ */
 public @interface IsMobile {
 	boolean required() default true;
 	

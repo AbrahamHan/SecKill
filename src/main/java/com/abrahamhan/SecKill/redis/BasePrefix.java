@@ -1,5 +1,10 @@
 package com.abrahamhan.SecKill.redis;
 
+/**
+ * 前缀类的抽象类
+ * @author abrahamhan
+ *
+ */
 public abstract class BasePrefix  implements KeyPrefix{
 	
 	private int expireSeconds;

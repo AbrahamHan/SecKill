@@ -8,6 +8,7 @@ import com.abrahamhan.SecKill.domain.User;
 
 @Mapper
 public interface UserDao {
+	//同过id来获取用户
 	@Select("Select * from user where id = #{id}")
 	public User getById(@Param("id") int id);
 }

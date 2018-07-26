@@ -19,11 +19,18 @@ public class GoodsService {
 	public List<GoodsVo> listGoodsVo(){
 		return goodsDao.listGoodsVo();
 	}
-
+	/**
+	 * 通过goods的id获取详细goods信息
+	 * @param goodsId
+	 * @return
+	 */
 	public GoodsVo getGoodsVoByGoodsId(long goodsId) {
 		return goodsDao.getGoodsVoByGoodsId(goodsId);
 	}
-
+	/**
+	 * 减少库存
+	 * @param goods
+	 */
 	public void reduceStock(GoodsVo goods) {
 		SecKillGoods g = new SecKillGoods();
 		g.setGoodsId(goods.getId());

@@ -87,6 +87,28 @@ public class RedisService {
 		}
 	}
 	
+	
+	/**
+	 * 删除key值
+	 * @param prefix
+	 * @param key
+	 * @return
+	 */
+	
+	public<T> boolean delete(KeyPrefix prefix,String key) {
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			//生成真正的key
+			String realKey = prefix.getPrefix() + key;
+			long ret = jedis.del(realKey);
+			return ret > 0;
+		}
+		finally {
+			returnToPool(jedis); 
+		}
+	}
+	
 	/**
 	 * 设置<key,value>
 	 * @param prefix
@@ -124,7 +146,11 @@ public class RedisService {
 			returnToPool(jedis); 
 		}
 	}
-	
+	/**
+	 * 将javabean转换成String类型
+	 * @param value
+	 * @return
+	 */
 	
 	private<T> String beanToString(T value) {
 		if(value == null)
@@ -149,7 +175,12 @@ public class RedisService {
 			return JSON.toJSONString(value);
 		}
 	}
-
+	/**
+	 * 将Json对象还原成对象
+	 * @param str
+	 * @param clazz
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	private<T> T stringToBean(String str,Class<T> clazz) {
 		if(str == null || str.length() <= 0 || clazz == null)

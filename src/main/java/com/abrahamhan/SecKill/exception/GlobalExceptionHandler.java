@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.abrahamhan.SecKill.result.CodeMsg;
 import com.abrahamhan.SecKill.result.Result;
 
+
+/**
+ * 全局异常处理类
+ * @author abarhamhan
+ *
+ */
 @ControllerAdvice
 @ResponseBody
 public class GlobalExceptionHandler {
@@ -20,11 +26,15 @@ public class GlobalExceptionHandler {
 	public Result<String> exceptionHandler(HttpServletRequest request,Exception e)
 	{
 		e.printStackTrace();
+		/**
+		 * 如果是全局异常，则返回错误信息
+		 */
 		if(e instanceof GlobalException)
 		{
 			GlobalException ex = (GlobalException) e;
 			return Result.error(ex.getCm());
 		}
+		//如果是绑定异常，则直接获取错误
 		else if(e instanceof BindException)
 		{
 			BindException ex = (BindException) e; 

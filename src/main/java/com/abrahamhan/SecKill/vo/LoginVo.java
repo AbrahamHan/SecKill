@@ -5,7 +5,11 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import com.abrahamhan.SecKill.validator.IsMobile;
-
+/**
+ * 登录信息，验证使用JSR303来校验
+ * @author abrahamhan
+ *
+ */
 public class LoginVo {
 	
 	@NotNull

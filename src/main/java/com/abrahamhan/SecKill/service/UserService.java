@@ -10,7 +10,11 @@ import com.abrahamhan.SecKill.domain.User;
 public class UserService {
 	@Autowired
 	UserDao userDao;
-	
+	/**
+	 * 通过用户id获取用户
+	 * @param id
+	 * @return
+	 */
 	public User getById(int id)
 	{
 		return userDao.getById(id);
