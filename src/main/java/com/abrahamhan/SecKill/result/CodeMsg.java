@@ -23,6 +23,8 @@ public class CodeMsg {
 	//秒杀模块 5005XX
 	public static CodeMsg SEC_KILL_OVER = new CodeMsg(500500,"商品已经秒杀完毕");
 	public static CodeMsg REPEATE_SEC_KILL = new CodeMsg(500501,"不能重复秒杀");
+	public static CodeMsg SEC_KILL_OVER1 = new CodeMsg(500500,"overlapmap,商品已经秒杀完毕");
+	public static CodeMsg SEC_KILL_OVER2 = new CodeMsg(500500,"redis商品已经秒杀完毕");
 	public CodeMsg(int i, String string) {
 		this.code = i;
 		this.msg = string;

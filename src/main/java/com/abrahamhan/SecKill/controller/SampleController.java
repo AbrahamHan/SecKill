@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.abrahamhan.SecKill.domain.User;
+import com.abrahamhan.SecKill.rabbitmq.MQSender;
 import com.abrahamhan.SecKill.redis.RedisService;
 import com.abrahamhan.SecKill.redis.UserKey;
 import com.abrahamhan.SecKill.result.Result;
@@ -18,6 +19,38 @@ public class SampleController {
 	UserService userService;
 	@Autowired
 	RedisService redisService;
+	
+	@Autowired
+	MQSender sender;
+	
+//	@RequestMapping("/mq/header")
+//    @ResponseBody
+//    public Result<String> header() {
+//		sender.sendHeader("hello,Abraham");
+//        return Result.success("Hello，world");
+//    }
+//	
+//	@RequestMapping("/mq/fanout")
+//    @ResponseBody
+//    public Result<String> fanout() {
+//		sender.sendFanout("hello,Abraham");
+//        return Result.success("Hello，world");
+//    }
+//	
+//	@RequestMapping("/mq/topic")
+//    @ResponseBody
+//    public Result<String> topic() {
+//		sender.sendTopic("hello,Abraham");
+//        return Result.success("Hello，world");
+//    }
+//	
+//	@RequestMapping("/mq")
+//    @ResponseBody
+//    public Result<String> mq() {
+//		sender.send("hello,Abraham");
+//        return Result.success("Hello，world");
+//    }
+	
 	@RequestMapping("/db/get")
 	@ResponseBody
 	public Result<User> dbGet()

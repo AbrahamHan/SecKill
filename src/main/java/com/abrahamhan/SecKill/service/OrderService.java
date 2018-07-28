@@ -54,17 +54,20 @@ public class OrderService {
 		orderInfo.setOrderChannel(1);
 		orderInfo.setStatus(0);
 		orderInfo.setUserId(user.getId());
-		long orderId = orderDao.insert(orderInfo);
+		orderDao.insert(orderInfo);
 		SecKillOrder secKillOrder = new SecKillOrder();
 		secKillOrder.setGoodsId(goods.getId());
-		secKillOrder.setOrderId(orderId);
-		
+		secKillOrder.setOrderId(orderInfo.getId());
 		secKillOrder.setUserId(user.getId());
 		orderDao.insertSecKillOrder(secKillOrder);
 		
 		redisService.set(OrderKey.getSeckillOrderByUidGid, ""+user.getId()+"_"+goods.getId(), secKillOrder);
 		
-		return orderInfo;
+		return orderInfo; 
 	}
-	
+
+	public void deleteOrders() {
+		orderDao.deleteOrders();
+		orderDao.deleteMiaoshaOrders();
+	}
 }
