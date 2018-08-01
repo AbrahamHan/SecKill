@@ -23,8 +23,11 @@ public class CodeMsg {
 	//秒杀模块 5005XX
 	public static CodeMsg SEC_KILL_OVER = new CodeMsg(500500,"商品已经秒杀完毕");
 	public static CodeMsg REPEATE_SEC_KILL = new CodeMsg(500501,"不能重复秒杀");
-	public static CodeMsg SEC_KILL_OVER1 = new CodeMsg(500500,"overlapmap,商品已经秒杀完毕");
-	public static CodeMsg SEC_KILL_OVER2 = new CodeMsg(500500,"redis商品已经秒杀完毕");
+	public static CodeMsg SEC_KILL_OVER1 = new CodeMsg(500502,"overlapmap,商品已经秒杀完毕");
+	public static CodeMsg SEC_KILL_OVER2 = new CodeMsg(500503,"redis商品已经秒杀完毕");
+	public static CodeMsg REQUEST_ILLEGAL = new CodeMsg(500504,"请求非法");
+	public static CodeMsg SEC_KILL_FAIL = new CodeMsg(500505,"秒杀失败");
+	public static CodeMsg ACCESS_LIMIT_REACHED = new CodeMsg(500506,"访问太频繁！");
 	public CodeMsg(int i, String string) {
 		this.code = i;
 		this.msg = string;

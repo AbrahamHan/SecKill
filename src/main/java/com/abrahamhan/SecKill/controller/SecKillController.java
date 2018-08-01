@@ -1,7 +1,12 @@
 package com.abrahamhan.SecKill.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,12 +14,13 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.abrahamhan.SecKill.domain.OrderInfo;
+import com.abrahamhan.SecKill.access.AccessLimit;
 import com.abrahamhan.SecKill.domain.SecKillOrder;
 import com.abrahamhan.SecKill.domain.SecKillUser;
 import com.abrahamhan.SecKill.rabbitmq.MQSender;
@@ -103,13 +109,20 @@ public class SecKillController implements InitializingBean{
 	 * @param goodsId
 	 * @return
 	 */
-    @RequestMapping(value="/do_seckill", method=RequestMethod.POST)
+    @RequestMapping(value="/{path}/do_seckill", method=RequestMethod.POST)
     @ResponseBody
     public Result<Integer> seckill(Model model,SecKillUser user,
-    		@RequestParam("goodsId")long goodsId) {
+    		@RequestParam("goodsId")long goodsId,
+    		@PathVariable ("path") String path) {
     	model.addAttribute("user", user);
     	if(user == null) {
     		return Result.error(CodeMsg.SESSION_ERROR);
+    	}
+    	//验证path
+    	boolean checkPath = seckillOrderService.checkPath(user,goodsId,path);
+    	if(!checkPath)
+    	{
+    		return Result.error(CodeMsg.REQUEST_ILLEGAL);
     	}
     	//内存标记，减少redis访问
     	boolean over = localOverMap.get(goodsId);
@@ -135,7 +148,43 @@ public class SecKillController implements InitializingBean{
     	sender.sendSecKillMessage(mm);;
     	return Result.success(0);//排队中
     }
+    @AccessLimit(seconds=5, maxCount=5, needLogin=true)
+    @RequestMapping(value="/path", method=RequestMethod.GET)
+    @ResponseBody
+    public Result<String> getSeckillPath(SecKillUser user,
+    		@RequestParam("goodsId")long goodsId,
+    		@RequestParam(value="verifyCode", defaultValue="0") int verifyCode) {
+    	if(user == null) {
+    		return Result.error(CodeMsg.SESSION_ERROR);
+    	}
+    	boolean check = seckillOrderService.checkVerifyCode(user, goodsId, verifyCode);
+    	if(!check) {
+    		return Result.error(CodeMsg.REQUEST_ILLEGAL);
+    	}
+    	String path = seckillOrderService.createSeckillPath(user, goodsId);
+    	
+		return Result.success(path);
+    }
     
+    @RequestMapping(value="/verifyCode", method=RequestMethod.GET)
+    @ResponseBody
+    public Result<String> getSeckillVerifyCode(HttpServletResponse response,SecKillUser user,
+    		@RequestParam("goodsId")long goodsId) {
+    	if(user == null) {
+    		return Result.error(CodeMsg.SESSION_ERROR);
+    	}
+    	try {
+    		BufferedImage image  = seckillOrderService.createVerifyCode(user, goodsId);
+    		OutputStream out = response.getOutputStream();
+    		ImageIO.write(image, "JPEG", out);
+    		out.flush();
+    		out.close();
+    		return null;
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    		return Result.error(CodeMsg.SEC_KILL_FAIL);
+    	}
+    }
     /**
      * orderId：成功
      * -1：库存不足，秒杀失败
